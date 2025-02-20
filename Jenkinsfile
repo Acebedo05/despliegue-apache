@@ -1,23 +1,46 @@
 pipeline {
     agent any
+
+    environment {
+        DEPLOY_DIR = "/var/www/html"
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo 'Copiando los ficheros'
+                // Clonar el repositorio
+		git 'https://github.com/Acebedo05/despliegue-apache.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Instalar dependencias de Node.js (npm)
                 sh 'npm install'
-                sh 'npm run build'                
             }
         }
-        stage('Test') {
+
+        stage('Build React App') {
             steps {
-                echo 'Testing..'
+                // Compilar la aplicación React
+                sh 'npm run build'
             }
         }
-        stage('Deploy') {
+
+        stage('Deploy to Apache') {
             steps {
-		echo 'Desploying...'
-		sh 'cp -r ./build/* /var/www/html/'    
-	    }
+                // Copiar los archivos compilados a /var/www/html/
+                sh 'sudo cp -r build/* ${DEPLOY_DIR}/'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Despliegue exitoso."
+        }
+        failure {
+            echo "El pipeline falló."
         }
     }
 }
