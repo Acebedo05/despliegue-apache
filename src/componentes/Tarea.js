@@ -3,6 +3,7 @@ import '../hojas-de-estilo/Tarea.css';
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 function Tarea({ id, texto, completada, completarTarea, eliminarTarea }) {
+// Comentario de Prueba
   return (
     <div className={completada ? 'tarea-contenedor completada' : 'tarea-contenedor'}>
       <div 
